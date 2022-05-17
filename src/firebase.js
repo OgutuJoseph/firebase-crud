@@ -1,10 +1,8 @@
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_KEY,
+    apiKey: "AIzaSyBaMEQ5WdzeUqa-3MXudWnbJus40Uz71N8",
     authDomain: "fir-crud-cdb0b.firebaseapp.com",
     projectId: "fir-crud-cdb0b",
     storageBucket: "fir-crud-cdb0b.appspot.com",
@@ -12,5 +10,6 @@ const firebaseConfig = {
     appId: "1:783386807238:web:c768046058d4d493c4c0c7"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth();
