@@ -13,7 +13,7 @@ import SettingsApplicationsOutlinedIcon from '@mui/icons-material/SettingsApplic
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { Link } from 'react-router-dom';
-import { DarkModeContext } from '../../context/darkModeContext';
+import { DarkModeContext } from '../../context/darkMode/darkModeContext';
 
 const Sidebar = () => {
 
