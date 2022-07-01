@@ -3,11 +3,44 @@ import './New.scss';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Navbar from '../../components/navbar/Navbar';
 import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined'
+import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const New = ({ inputs, title }) => {
 
     const [file, setFile] = useState('');
     console.log('file: ', file);
+    const [data, setData] = useState({});
+
+    const handleInput = (e) => {
+        const id = e.target.id;
+        const value = e.target.value;
+
+        setData({ ...data, [id]: value })
+    }
+
+    const handleAdd = async (e) => {
+        e.preventDefault();
+
+        // await setDoc(doc(db, 'cities', 'LA'), {
+        //     name: 'Los Angeles',
+        //     state: 'CA',
+        //     country: 'USA'
+        // })
+
+        try {
+            const res = await createUserWithEmailAndPassword(auth, data.email, data.password)
+            await setDoc(doc(db, 'users', res.user.uid), {
+                ...data,
+                timestamp: serverTimestamp()
+            })
+        } catch (error) {
+            console.log('error: ', error)
+        }
+
+        
+    }
 
     return (
         <div className='new'>
@@ -23,7 +56,7 @@ const New = ({ inputs, title }) => {
                         <img alt='' src={file ? URL.createObjectURL(file) : '/images/new/camera.jpg' } />
                     </div>
                     <div className='right'>
-                        <form>
+                        <form onSubmit={handleAdd}>
                             <div className='formInput'>
                                 <label htmlFor='file'>Image: <DriveFolderUploadOutlinedIcon className='icon' /></label>
                                 <input type='file' id='file' style={{ display: 'none' }} onChange={e => setFile(e.target.files[0])} />
@@ -31,10 +64,10 @@ const New = ({ inputs, title }) => {
                             {inputs.map((input) => (
                                 <div className='formInput' key={input.id}>
                                     <label>{input.label}</label>
-                                    <input type={input.type} placeholder={input.placeholder} />
+                                    <input id={input.id} type={input.type} placeholder={input.placeholder} onChange={handleInput} />
                             </div> 
                             ))}
-                            <button>Save</button>
+                            <button type='submit'>Save</button>
                         </form>    
                     </div>
                 </div>
