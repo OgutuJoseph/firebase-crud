@@ -3,7 +3,7 @@ import './DataTable.scss';
 import { DataGrid } from '@mui/x-data-grid';
 import { userColumns, userRows } from '../../datatablesource';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 // const columns = [
@@ -47,21 +47,36 @@ const DataTable = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            let list =[]
-            try {
-                const querySnapshot = await getDocs(collection(db, 'users'));
-                querySnapshot.forEach((doc) => {
-                    // list.push(doc.data())
-                    list.push({ id: doc.id, ...doc.data() })
-                });
-                setData(list);
-                console.log('list: ', list);
-            } catch (error) {
-                console.log('error: ', error)
-            }
+        // const fetchData = async () => {
+        //     let list =[]
+        //     try {
+        //         const querySnapshot = await getDocs(collection(db, 'users'));
+        //         querySnapshot.forEach((doc) => {
+        //             // list.push(doc.data())
+        //             list.push({ id: doc.id, ...doc.data() })
+        //         });
+        //         setData(list);
+        //         console.log('list: ', list);
+        //     } catch (error) {
+        //         console.log('error: ', error)
+        //     }
+        // }
+        // fetchData();
+
+        // listen realtime
+        const unsub = onSnapshot(collection(db, 'users'), (snapShot) => {
+            let list  = [];
+            snapShot.docs.forEach(doc => {
+                list.push({ id:doc.id, ...doc.data() })
+            });
+            setData(list)
+        }, (error) => {
+            console.log('error: ', error)
+        })
+
+        return () => {
+            unsub();
         }
-        fetchData();
     }, [])
 
 
