@@ -7,6 +7,7 @@ import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/fires
 import { auth, db, storage } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom'
 
 const New = ({ inputs, title }) => {
 
@@ -14,6 +15,7 @@ const New = ({ inputs, title }) => {
     console.log('file: ', file);
     const [data, setData] = useState({});
     const [percentage, setPercentage] = useState(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const uploadFile = () => {
@@ -82,6 +84,7 @@ const New = ({ inputs, title }) => {
                 ...data,
                 timestamp: serverTimestamp()
             })
+            navigate(-1)
         } catch (error) {
             console.log('error: ', error)
         }
